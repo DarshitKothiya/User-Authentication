@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../helper/FirestoreHelper.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({Key? key}) : super(key: key);
@@ -18,9 +21,44 @@ class _HomepageState extends State<Homepage> {
         backgroundColor: Color(0xff2b2d42),
         title: Text('Homepage'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, 'login_page');
+            },
+            icon: const Icon(Icons.logout),
+          ),
+        ],
       ),
-      body: Center(
-        child: Text('Welcome To homepage...',style: GoogleFonts.habibi(fontSize: 25,),),
+      body: StreamBuilder(
+        stream: FireStoreHelper.fireStoreHelper.loginData(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else if (snapshot.hasData) {
+            QuerySnapshot<Map<String, dynamic>>? res = snapshot.data;
+            List data = res!.docs;
+
+            return ListView.builder(
+              itemCount: data.length,
+              itemBuilder: (context, i) {
+                return Card(
+                  elevation: 5,
+                  child: ListTile(
+                    isThreeLine: true,
+                    title: Text('${data[i]['email']}\n'),
+                    subtitle: Text('Role: ${data[i]['role']}'),
+                  ),
+                );
+              },
+            );
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
       ),
     );
   }

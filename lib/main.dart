@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:login_app/screen/AdminPage.dart';
 import 'package:login_app/screen/Homepage.dart';
 import 'package:login_app/screen/Login.dart';
 import 'package:login_app/screen/SplashScreen.dart';
@@ -16,6 +17,7 @@ void main() async{
         '/': (context)=> const SplashScreenPage(),
         'login_page': (context)=> const LoginPage(),
         'homepage': (context)=> const Homepage(),
+        'adminPage': (context)=> const AdminPage(),
       },
     )
   );
